@@ -10,18 +10,22 @@ from ganga import Job, jobs, Executable, Local
 # Enable monitoring in Python
 ganga.enableMonitoring()
 
-########################################
+#--------------------------------------#
 
 def main():
 
-    # Create job
-    job = createBasicGangaJob("Hello World")
+    # Create & specify basic Ganga job
+    job = Job(name="Basic Ganga Job")
+    job.application = Executable()
+    job.application.exe = "/bin/echo"
+    job.application.args = "Hello World"
+    job.backend = Local()
 
     # Submit job
     job.submit()
     print(f"PYTHON OUTPUT: Job Submited with ID: {job.id}")
 
-    # Monitor job
+    # Monitor job status
     monitorGangaJob(job)
 
     # Delete file after job is complete
@@ -30,22 +34,9 @@ def main():
 
     return True
 
-########################################
+#--------------------------------------#
 
-# Create & specify basic Ganga job
-def createBasicGangaJob(args="Hello World"):
-    
-    job = Job(name="Basic Ganga Job")
-    job.application = Executable()
-    job.application.exe = "/bin/echo"
-    job.application.args = args
-    job.backend = Local()
-
-    return job
-
-########################################
-
-# Monitor Ganga job
+# Monitor Ganga job status
 def monitorGangaJob(job):
 
     # Ganga Job check
@@ -64,9 +55,11 @@ def monitorGangaJob(job):
             status = job.status
             job.peek("stdout", "cat")
             print(f"PYTHON OUTPUT: Job with ID {job.id} Complete!")
-            return "completed"
+            break
+    
+    return "completed"
 
-########################################
+#--------------------------------------#
 
 # Execute main()
 if __name__ == "__main__":
