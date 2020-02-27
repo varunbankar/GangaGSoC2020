@@ -64,9 +64,7 @@ def monitorGangaJob(job):
             status = job.status
             job.peek("stdout", "cat")
             print(f"PYTHON OUTPUT: Job with ID {job.id} Complete!")
-            break
-
-    return True
+            return True
 
 ########################################
 
