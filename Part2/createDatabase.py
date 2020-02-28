@@ -71,6 +71,9 @@ def main():
     # Monitor ganga job status
     monitorGangaJob(recreatedJob)
 
+    # Print stdout of the job
+    recreatedJob.peek("stdout", "cat")
+
     # Removing jobs
     print("PYTHON OUTPUT: Removing jobs...")
     job.remove()
@@ -103,6 +106,8 @@ def addToDatabase(job):
     # Adding & commiting changes to databse
     session.add(addJob)
     session.commit()
+    # print(f"PYTHON OUTPUT: Stored Ganga Job to Database")
+    # print(f"PYTHON OUTPUT: Job Description\n{addJob.jobinfo}")
 
     # Closing database session
     session.close()
