@@ -14,18 +14,14 @@ ganga.enableMonitoring()
 
 def main():
 
-    # Create & specify basic Ganga job
-    job = Job(name="Basic Ganga Job")
-    job.application = Executable()
-    job.application.exe = "/bin/echo"
-    job.application.args = "Hello World"
-    job.backend = Local()
+    # Create job
+    job = createBasicGangaJob("Hello World")
 
     # Submit job
     job.submit()
     print(f"PYTHON OUTPUT: Job Submited with ID: {job.id}")
 
-    # Monitor job status
+    # Monitor job
     monitorGangaJob(job)
 
     # Delete file after job is complete
@@ -36,7 +32,20 @@ def main():
 
 #--------------------------------------#
 
-# Monitor Ganga job status
+# Create & specify basic Ganga job
+def createBasicGangaJob(args="Hello World"):
+    
+    job = Job(name="Basic Ganga Job")
+    job.application = Executable()
+    job.application.exe = "/bin/echo"
+    job.application.args = args
+    job.backend = Local()
+
+    return job
+
+#--------------------------------------#
+
+# Monitor Ganga job
 def monitorGangaJob(job):
 
     # Ganga Job check

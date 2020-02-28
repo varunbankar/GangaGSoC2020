@@ -64,11 +64,11 @@ def main():
     merger.merge(job2.subjobs, os.path.join(currentDir, "wordCounterOutput"))
 
     # Removing jobs
+    print("PYTHON OUTPUT: Removing jobs...")
     job.remove()
     job2.remove()
 
     return True
-
 
 #--------------------------------------#
 

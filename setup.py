@@ -12,6 +12,9 @@ setup(
     install_requires=[
           'pytest',
           'ganga',
+          'PyPDF2',
+          'pdfminer',
+          'SQLAlchemy',
       ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
