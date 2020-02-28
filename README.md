@@ -1,80 +1,87 @@
-# Challenge for Ganga projects in GSoC 2020
+# Ganga Project GSoC 2020 Challenge
 
-The challenge that forms part of the Ganga projects in GSoC is divided up into three pieces.
+# Introduction
 
-1) A part that everybody should attempt that demonstrates the ability to do a basic job in Ganga and work with python
-2) A part that is related to the persistent storage project that require a demonstration of how you work with a model database from python.
-3) A part that is specific to the GUI project where you will be required to create a webserver that can demonstrate its interaction with Ganga in a simple manner.
+Challenge for Google Summer of Code 2020 by Ganga Project. 
 
-You are welcome to do all three parts, but if you are only interested in applying for the GUI project, you will not be disadvantaged by not attempting the one related to the persistent storage.
-
-## Setup
-Following the steps below will ensure that you can work freely on your project, can submit code through pushing it to GitHub but at the same time keep it private. Please avoid making your repository public as we want each student to work on this independently.
-
-- Create a fork of this repository which is private in GitHub
-- Give the GitHub users `egede`, `alexanderrichards`, `mesmith75` read access to your repository
-
-For performing actual work for the challenge, we suggest something like
-
-```bash
-virtualenv -p python3 GSoC
-cd GSoC/
-. bin/activate
-pip install -e git+https://github.com/YOUR-GITHUB-USERNAME-HERE/GangaGSoC2020#egg=gangagsoc
-```
-
-Through the dependency, this will install Ganga as well such that you can work with it directly inside the virtualenv.
-
-Communication is an important part of working in GSoC. Please just ask by email to all/any of the developers about anything that you are in doubt about. 
-
-## Completing challenge
-
-To complete the challenge you should push everything to the master branch of your forked repository. Then please send an email to us that you have finished. In the repository, we expect
-- That the `setup.py` file is updated with any extra `python` package dependencies that you may have introduced.
-- That there is a file `PROJECT.md` that documents what you have done and how we can test it.
-- That you have implemented tests of the code that can be tested with `pytest` to illustrate that everything works as expected.
-- That anything (like interaction with GUI), that can not easily be made to work with `pytest` is fully explained.
-
-## Ganga initial task
-
-As stated above everybody should attempt to complete this task
-
-1) Demonstrate that you can run a `Hello World` job that executes on a `Local` backend.
-2) Create a job in Ganga that demonstrates splitting a job into multiple pieces and then collates the results at the end.
-  - Use the included file `CERN.pdf`.
-  - In python, or through using system calls, split the pdf file into individual pages. 
-  - Create a job in Ganga that will count the number of occurences of the word "the" in the text of the PDF file. It should be counted whether it is capitalised or not. Make sure not to count other words with the same letters. So "The Ganga project is the best" should have a count of two, while "There is nothing here" should have a count of zero.
-  - Using the `ArgSplitter` create subjobs that each will count the occurences for a single page.
-  - Create a merger that adds up the number extracted from each page and places the total number into a file.
-  - Create test cases that demonstrate what you have done and that it is working. In the `test` directory you will find an example of a trivial test. All tests can be executed by `python -m unittest discover test "*.py"`, where `test` is the name of the directory. To make test that include Ganga objects, be inspired by tests in `ganga/GangaCore/test/GPI`.
-
-## Ganga persistent storage task
-
-1) Demonstrate that you can create a simple database where the server runs on the local machine. Demonstrate that you can read/write tothe database from within python. The database backend has to be an open source solution but otherwise the choice of technology is up to you. Mske sure to provide instructions on how to set up the database.
-2) Now take the Ganga Job object created in the first exercise and store this as a simple blob in the database. You might find the function `full_print(j)` (where `j` is a job object) that is available at the Ganga prompt useful for creating a full string representation of the job. Demonstrate that you can read the blob back and re-create a job object.
-3) Measure the performance of reading the blob from the database and re-create the job object a thousand times. Measure the time spent reading the blob from the database separately from the time it takes to recreate the job objects. The emphasis should be on that you can measure the times not on optimising how fast it is. 
-
-## Ganga GUI task
 ---
 
-1) For the first part of this task we will not need to use the Ganga framework at all, you will need to show the following:
+# How to Set Up
 
- - Ability to create a simple webserver using a python based web framework of your choosing
- - Have the webserver render dynamic content using a templating engine (e.g. jinja2)
- - Modify the server to allow updating of the content either by making it a RESTful service (with ajax requests client side) or by utilising WebSockets.
+#TODO
 
+---
 
-(*__Note__ that the content for this task can be anything that you like and we would very much like to see you be as creative as possible with the actual design of the web page.*)
+# Challenge
 
-2) For the second part we will introduce some of the Ganga framework:
+## Part 1
 
- - This time we want the website to be able to submit a simple Ganga job.
-   (*__Note__ we don't expect the job to be customisable at this stage, a simple button to submit a new job is all that is required.*)
- - This will mean that server side you will need to include the following code and have ganga as a dependency
- ```python
-import ganga.ganga
-from ganga import Job
-j = Job()
-j.submit()
-```
- - The server will have to monitor the status of the job and relay it back to the client in real time
+### Task 1 - Creating Simple Ganga Job
+
+For this task, basic Ganga Job was supposed to be created which would run `Hello Run` after submitting. The file associated with this task is `./Part1/basicGangaJob.py` . I will briefly walk through the code.
+
+- First few lines are the imports and I noticed that we need to manually enable monitoring of Ganga job else after running the script it would not update the status of the job, hence `ganga.enableMonitoring()` enables monitoring of Ganga jobs to monitor the status of the job after executing the script.
+- Function `createBasicGangaJob(args="Hello World")` - function which creates a Ganga Job Object with specific attributes and returns it. Parameter of the function accepts the arguments to `echo` whose default value is `Hello World`
+    - This function will then be further used in Part 2 of the challenge.
+- Function `monitorGangaJob(job)` - function accepts only an instance of Ganga Job and monitors it's status. Print anytime the status of the jobs changes and returns `completed` after successful completion of the job.
+    - This function will be used in all further tasks.
+- Function `Main()` - created a basic Ganga Job using `createBasicGangaJob(args)` function and the submits it. `monitorGangaJob(job)` monitors the job status and when the job is completed, `job.peek()` prints the `stdout` of the job in the terminal. After the task is finished, the job is then removed.
+
+**DEMO:**
+
+### Task 2 - Splitting PDF, Using Subjobs to Count Words, Merging the Output
+
+For this task, the given file `CERN.pdf` was supposed to be split into individual pages and the using `ArgSpliiter` count the occurrence of the word `the` in every individual file and save it in the output. After the output of the all subjobs was to be added and stored in a file. The main file associated with this task is `./Part1/wordCounter.py` with the helper modules `./Part1/pdfSplitter.py`, `./Part1/pdfSplitter.sh`, `./Part1/count.sh`, `./Part1/merger.py` . With all these files in place, I will briefly walk through the code.
+
+- First few lines are the imports and `ganga.enableMonitoring()` enables monitoring of Ganga jobs in the python script.
+- In the `main()` function can be divided into 3 parts:
+    - First, A Ganga Job is created to split `CERN.pdf` into individual pages. To the Ganga job, `[pdfSplitter.py](http://pdfsplitter.py)` & `[pdfSplitter.sh](http://pdfsplitter.sh)` are given as input files.
+        - `[pdfSplitter.py](http://pdfsplitter.py)` - uses PyPDF2 package and splits the pdf into individual page pdf and saves them in the same directory.
+        - `[pdfSplitter.sh](http://pdfsplitter.sh)` - simple bash script to run `pdfSplitter.py`
+        - The job is then submitted and monitored using `monitorGangaJob(job)` from Task 1
+        - After the job is completed, all the jobs are stored into the `outputdir` of the Ganga job and information about them in `job.outputfiles`
+        - Using the information in `job.outputfiles` , an array `args` is created containing the names of all the split files to be used for `ArgSplitter`
+    - Second, another Ganga Job is created with `splitter` as `ArgSplitter(args=args)` , the job uses `[count.sh](http://count.sh)` to count the occurrence of word `the` in a given file. Input files for the job is directly taken from `job.outputfiles` and output file is set to `count.txt` which will contain the numeric count of occurrence of word `the`
+        - `[count.sh](http://count.sh)` - takes a file name as argument and count the number of occurrence of the word `the` and stores the value in `output.txt`
+        - The job is then submitted and monitored using `monitorGangaJob(job)` from Task 1
+        - After the job is completed, the `output.txt` of all the subjobs is merged
+    - Third, `CustomMerger()` is implemented to merge the `output.txt` from all the subjobs and save in it the directory `wordCounterOutput` . This merger uses `[merger.py](http://merger.py)` as module.
+        - `[merger.py](http://merger.py)` - takes `output.txt` of all the subjobs, converts the value inside it into integer, add all the values and save it in the file in `wordCounterOutput`
+- After all the jobs are finished, they are removed
+
+**DEMO:**
+
+## Part 2
+
+### Task 1 - Creating & Interacting with Database
+
+For the task, a simple database was to be created, and Ganga job info was to be stored in it, Afterwards, the info was to be retrieved converting it back to a Ganga job. The file associated with this task is `./Part2/createDatabase.py`
+
+- First few lines are imports for `SQLAlchemy` which is a ORM to create and manage databases in Python.
+- Next section contains the configuration for `SQLAlchemy` - for this demonstration I have used `SQLite` (which is a local file based database solution, mostly used for prototyping) as it doesn't need us to start any server. But this solution can easily be migrated to a database server with just one change of line, that is `DATABASE_URI`
+- In the next section, I have described a class which will be used by `SQLAlchemy` to create table and do operations on it.
+- Function `recreateDatabase` - is a function to drop all information in the database and recreate it fresh - this is helpful for the task (not applicable besides prototyping)
+- Function `addToDatabase` - takes a Ganga Job Object as an argument and stores it's text format in the database
+- Function `readFromDatabase` - takes Database Job ID as an argument and return the text related to that Job
+- Function `createJob` -  creates a job using the text provided by `readFromDatabase` function
+- Function `main()` - using `createBasicGangaJob` from Task 1 create a basic Ganga Job, adds it to database, and using `readFromDatabase` the job text is stored in `jobinfo` variable, and using `createJob` function the basic job is recreated and submitted to run. The recreatedJob is monitored using `monitorGangaJob` from Task 1. After the job is finished, it is removed.
+
+**DEMO:**
+
+### Task 2 - Measure Time
+
+For this task, we had to measure time taken to run `readFromDatabase` function and `createJob` function 1000 times. The file associated with this task is `./Part2/timeCalc.py`
+
+- First few lines are import for `timeit`
+- Function `readFromDatabase_time` - using `timeit.timeit` benchmarks the time it take for `readFromDatabase` function to run 1000 times.
+- Function `createJob_time` - using `timeit.timeit` benchmarks the time it take for `createJob` function to run 100 times.
+
+**DEMO:**
+
+## Part 3
+
+### Task 1 - Starting Up Simple Web Server
+
+#TODO
+
+---
