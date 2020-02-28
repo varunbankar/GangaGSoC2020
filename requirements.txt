@@ -7,7 +7,7 @@ certifi==2019.11.28
 chardet==3.0.4
 decorator==4.4.1
 ganga==8.2.2
--e git+https://github.com/varunbankar/GangaGSoC2020@b6291ba9f187f5759f0f6448c4f1731af5ef4fea#egg=gangagsoc
+-e git+https://github.com/varunbankar/GangaGSoC2020@a7dda1cbda64dcf86f82532e81d948fdc635f1db#egg=gangagsoc
 google-api-python-client==1.7.11
 google-auth==1.11.2
 google-auth-httplib2==0.0.3
@@ -25,6 +25,7 @@ pexpect==4.8.0
 pickleshare==0.7.5
 pluggy==0.13.1
 prompt-toolkit==3.0.3
+psycopg2-binary==2.8.4
 ptyprocess==0.6.0
 py==1.8.1
 pyasn1==0.4.8
