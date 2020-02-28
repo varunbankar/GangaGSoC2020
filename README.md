@@ -27,7 +27,7 @@ For this task, basic Ganga Job was supposed to be created which would run `Hello
     - This function will be used in all further tasks.
 - Function `Main()` - created a basic Ganga Job using `createBasicGangaJob(args)` function and the submits it. `monitorGangaJob(job)` monitors the job status and when the job is completed, `job.peek()` prints the `stdout` of the job in the terminal. After the task is finished, the job is then removed.
 
-**DEMO:**
+**DEMO:** [https://youtu.be/8y0_s4Vr4VE](https://youtu.be/8y0_s4Vr4VE)
 
 ### Task 2 - Splitting PDF, Using Subjobs to Count Words, Merging the Output
 
@@ -49,7 +49,7 @@ For this task, the given file `CERN.pdf` was supposed to be split into individua
         - `[merger.py](http://merger.py)` - takes `output.txt` of all the subjobs, converts the value inside it into integer, add all the values and save it in the file in `wordCounterOutput`
 - After all the jobs are finished, they are removed
 
-**DEMO:**
+**DEMO:** [https://youtu.be/8y0_s4Vr4VE](https://youtu.be/8y0_s4Vr4VE)
 
 ## Part 2
 
@@ -66,7 +66,7 @@ For the task, a simple database was to be created, and Ganga job info was to be 
 - Function `createJob` -  creates a job using the text provided by `readFromDatabase` function
 - Function `main()` - using `createBasicGangaJob` from Task 1 create a basic Ganga Job, adds it to database, and using `readFromDatabase` the job text is stored in `jobinfo` variable, and using `createJob` function the basic job is recreated and submitted to run. The recreatedJob is monitored using `monitorGangaJob` from Task 1. After the job is finished, it is removed.
 
-**DEMO:**
+**DEMO:** [https://youtu.be/8y0_s4Vr4VE](https://youtu.be/8y0_s4Vr4VE)
 
 ### Task 2 - Measure Time
 
@@ -76,7 +76,7 @@ For this task, we had to measure time taken to run `readFromDatabase` function a
 - Function `readFromDatabase_time` - using `timeit.timeit` benchmarks the time it take for `readFromDatabase` function to run 1000 times.
 - Function `createJob_time` - using `timeit.timeit` benchmarks the time it take for `createJob` function to run 100 times.
 
-**DEMO:**
+**DEMO:** [https://youtu.be/8y0_s4Vr4VE](https://youtu.be/8y0_s4Vr4VE)
 
 ## Part 3
 
