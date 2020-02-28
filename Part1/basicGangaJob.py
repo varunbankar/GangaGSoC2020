@@ -24,6 +24,9 @@ def main():
     # Monitor job
     monitorGangaJob(job)
 
+    # Prints stdout of the job in the terminal
+    job.peek("stdout", "cat")
+
     # Delete file after job is complete
     job.remove()
     print(f"PYTHON OUTPUT: Deleted Job with ID {job.id}")
@@ -62,7 +65,6 @@ def monitorGangaJob(job):
 
         if job.status == "completed":
             status = job.status
-            job.peek("stdout", "cat")
             print(f"PYTHON OUTPUT: Job with ID {job.id} Complete!")
             break
     
