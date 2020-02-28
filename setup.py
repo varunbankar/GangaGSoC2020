@@ -15,6 +15,7 @@ setup(
           'PyPDF2',
           'pdfminer',
           'SQLAlchemy',
+          'psycopg2-binary',
       ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
