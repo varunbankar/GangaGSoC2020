@@ -26,11 +26,11 @@ def pdfSplitter(path):
         # Write individual page into another PDF
         pdfWriter = PdfFileWriter()
         pdfWriter.addPage(pdf.getPage(page))
-        outputFilename = f"{filename}_PAGE{page+1}.pdf"
+        outputFilename = "{}_PAGE{}.pdf".format(filename, (int(page)+1))
         with open(os.path.join(currentDir, outputFilename), "wb") as out:
             pdfWriter.write(out)
 
-        print(f"Created: {outputFilename}")
+        print("Created: {}".format(outputFilename))
 
 #--------------------------------------#
 
