@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python pdfSplitter.py
+python3 pdfSplitter.py
