@@ -12,8 +12,8 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 # Current Directory
 currentDir = os.path.dirname(os.path.realpath(__file__))
 
-# PDF File splitter according to pages
 def pdfSplitter(path):
+    """ Split PDF into individual pages """
     
     # Strip .pdf
     filename = os.path.splitext(os.path.basename(path))[0]
