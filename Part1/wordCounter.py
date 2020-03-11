@@ -4,11 +4,9 @@
 
 # Imports
 import os
-from os import walk
 import ganga
-import ganga.ganga
 from ganga import Job, jobs, Executable, File, LocalFile, ArgSplitter, CustomMerger, Local
-from basicGangaJob import monitorGangaJob
+from GangaCore.testlib.monitoring import run_until_completed
 
 # Enable monitoring in Python
 ganga.enableMonitoring()
@@ -22,16 +20,16 @@ def main():
 
     # Ganga job to split PDFs
     job = Job(name="Split PDF File")
-    job.application.exe = File("pdfSplitter.sh")
-    job.inputfiles = [ LocalFile("pdfSplitter.py"), LocalFile("CERN.pdf") ]
+    job.application.exe = File(os.path.join(currentDir, "pdfSplitter.sh"))
+    job.inputfiles = [ LocalFile(os.path.join(currentDir, "pdfSplitter.py")), LocalFile(os.path.join(currentDir, "CERN.pdf")) ]
     job.outputfiles = [ LocalFile("CERN_*.pdf") ]
     job.backend = Local()
 
     # Submiting the job
     job.submit()
 
-    # Monitoring the job status
-    monitorGangaJob(job)
+    # Run until the job status is completed
+    run_until_completed(job)
 
     # Arguments to be used in ArgSplitter
     args = []
@@ -45,22 +43,22 @@ def main():
 
     # Ganga Job to count the word file by file using subjobs
     job2 = Job(splitter=splitter, name="Count Word 'the'")
-    job2.application.exe = File("count.sh")
+    job2.application.exe = File(os.path.join(currentDir, "count.sh"))
     job2.inputfiles = job.outputfiles
     job2.outputfiles = [ LocalFile("count.txt") ]
     
     # Submiting the job2
     job2.submit()
 
-    # Monitoring job2 status
-    monitorGangaJob(job2)
+    # Run until the job2 status is completed
+    run_until_completed(job2)
 
     # Custom Merger to merger the output of the subjobs
     merger = CustomMerger()
     merger.files = ["count.txt"]
-    merger.module = File("merger.py")
+    merger.module = File(os.path.join(currentDir, "merger.py"))
     merger.ignorefailed = True
-    merger.overwrite = False
+    merger.overwrite = True
     merger.merge(job2.subjobs, os.path.join(currentDir, "wordCounterOutput"))
 
     # Removing jobs
