@@ -25,7 +25,7 @@ function Joke() {
 function refreshStatus() {
     job_ids = []
     document.querySelectorAll('.recent-job').forEach(function(job) {
-        if (job.dataset.status != "completed" && job.dataset.status != "new"){
+        if (job.dataset.status != "completed" && job.dataset.status != "new" && job.dataset.status != "failed"){
             job_ids.push(job.dataset.id)
         }
     });
