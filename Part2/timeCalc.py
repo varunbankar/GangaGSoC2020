@@ -13,7 +13,7 @@ jobinfo = readFromDatabase()
 
 #--------------------------------------#
 
-# Return time taken to execute readFromDatabase 1000 times
+# Return time taken to execute readFromDatabase() 1000 times
 def readFromDatabase_time():
 
     setup = """
@@ -26,15 +26,15 @@ readFromDatabase()"""
 
 #--------------------------------------#
 
-# Return time taken to execute createJob 100 times
-def createJob_time():
+# Return time taken to execute reCreateJob() 100 times
+def reCreateJob_time():
 
     setup = """
-from createDatabase import createJob
+from createDatabase import reCreateJob
 from __main__ import jobinfo"""
 
     testCode = """
-createJob(jobinfo)"""
+reCreateJob(jobinfo)"""
 
     print(timeit.timeit(setup = setup, stmt = testCode, number = 100))
 
@@ -42,6 +42,6 @@ createJob(jobinfo)"""
 
 if __name__ == "__main__":
     readFromDatabase_time() 
-    createJob_time()
+    reCreateJob_time()
 
 ########################################
