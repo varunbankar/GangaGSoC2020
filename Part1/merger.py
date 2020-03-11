@@ -9,13 +9,13 @@ import os
 #--------------------------------------#
 
 def mergefiles(file_list,output_file):
+    """ Custom merger helper module for merging the outputs of subjobs into one file """
     
     try:
 
         # Store count of "the" word
         totalCount = 0
 
-        # File to write total count
         f_out = open(output_file,'w')
 
         # Iterate over all the subjob's "count.txt"
@@ -25,7 +25,7 @@ def mergefiles(file_list,output_file):
             count = int(count)
             totalCount = totalCount + count
         
-        print(f"PYTHON OUTPUT: Total Count of 'the' is {totalCount}")
+        print("PYTHON OUTPUT: Total Count of 'the' is {}".format(totalCount))
 
         # Write the total count to the output file
         f_out.write(str(totalCount))
