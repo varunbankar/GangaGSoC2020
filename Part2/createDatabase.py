@@ -4,20 +4,24 @@
 
 # Imports
 import os
+import sys
+import time
+from io import StringIO 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import ganga
-import ganga.ganga
-from ganga import Job, load, export
-from Part1.basicGangaJob import createBasicGangaJob, monitorGangaJob
+from ganga import Job
+from GangaCore.GPIDev.Persistency import stripProxy
+from GangaCore.testlib.monitoring import run_until_completed
+from Part1.basicGangaJob import createBasicGangaJob
 
 #--------------------------------------#
 
 # Database configurations
-# SQLite data for prototyping purpose
-# With simple change in URI it can be connected to production level database like PostreSQL
+# SQLite database used here for prototyping purpose
+# With simple change in URI it can be connected to production grade database like PostreSQL
 # DATABASE_URI = "postgres+psycopg2://<USERNAME>:<PASSWORD>@<IP_ADDRESS>:<PORT>/<DATABASE_NAME>"
 DATABASE_URI = "sqlite:///database.db"
 engine = create_engine(DATABASE_URI)
@@ -25,7 +29,7 @@ Session = sessionmaker(bind=engine)
 
 #--------------------------------------#
 
-# Database Model
+# Base for Database Model
 Base = declarative_base()
 Base.metadata.create_all(engine)
 
@@ -41,8 +45,9 @@ class gangaJob(Base):
 
 #--------------------------------------#
 
-# Functionn to recreate database
 def recreateDatabase():
+    """ Recreate Database by deleting and rebuilding it """
+
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
 
@@ -53,7 +58,7 @@ def main():
     # Recreating database for fresh benchmarks
     recreateDatabase()
 
-    # Simple "Hello World" job created in first exercise
+    # Simple "Hello World" job - created in first exercise
     job = createBasicGangaJob("Hello World")
 
     # Add the job to database
@@ -62,14 +67,14 @@ def main():
     # Retrieve job info from database
     jobinfo = readFromDatabase()
 
-    # Create job from the retrieved information
-    recreatedJob = createJob(jobinfo)
+    # Recreate job from the retrieved information
+    recreatedJob = reCreateJob(jobinfo)
 
     # Submit job to test if it works
     recreatedJob.submit()
 
-    # Monitor ganga job status
-    monitorGangaJob(recreatedJob)
+    # Run until job is complete
+    run_until_completed(recreatedJob)
 
     # Print stdout of the job
     recreatedJob.peek("stdout", "cat")
@@ -81,8 +86,8 @@ def main():
 
 #--------------------------------------#
 
-# Function to add Ganga job to database
 def addToDatabase(job):
+    """ Add Ganga job to database """
 
     # Ganga Job check
     if not isinstance(job, Job):
@@ -92,13 +97,30 @@ def addToDatabase(job):
     # session to interact with database
     session = Session()
 
-    # Exporting job to a text file
-    export(job, "job.txt")
+    # Extracting job information to a variable: Export() Function inner working
+    strippedProxyJob = stripProxy(job)
 
-    # Reading exported file and storing content in a variable
-    jobfile = open("job.txt", "r") 
-    jobinfo = jobfile.read()
-    os.remove("job.txt")
+    with Capturing() as output:
+        strippedProxyJob.printTree(sys.stdout, "copyable")
+
+    lineList = [
+            "#Ganga# File created by Ganga - %s\n" % (time.strftime("%c")),
+            "#Ganga#\n",
+            "#Ganga# Object properties may be freely edited before reloading into Ganga\n",
+            "#Ganga#\n",
+            "#Ganga# Lines beginning #Ganga# are used to divide object definitions,\n",
+            "#Ganga# and must not be deleted\n",
+            "\n"]
+
+
+    l1 = ''.join(lineList)
+    name = strippedProxyJob._name
+    category = strippedProxyJob._category
+    l2 = "#Ganga# %s object (category: %s)\n" % (name, category)
+    l3 = '\n'.join(output)
+    
+    # Storing the Export() function like output to a variable
+    jobinfo = l1 + l2 + l3
 
     # Database row to add
     addJob = gangaJob(jobinfo=jobinfo)
@@ -106,8 +128,7 @@ def addToDatabase(job):
     # Adding & commiting changes to databse
     session.add(addJob)
     session.commit()
-    # print(f"PYTHON OUTPUT: Stored Ganga Job to Database")
-    # print(f"PYTHON OUTPUT: Job Description\n{addJob.jobinfo}")
+    print(f"PYTHON OUTPUT: Stored Ganga Job to Database")
 
     # Closing database session
     session.close()
@@ -116,8 +137,8 @@ def addToDatabase(job):
 
 #--------------------------------------#
 
-# Function to retrieve job info based on database ID (Default ID = 1)
 def readFromDatabase(jobID=1):
+    """ Retrieve job info based on database ID (Default ID = 1) """
 
     # session to interact with database
     session = Session()
@@ -132,20 +153,44 @@ def readFromDatabase(jobID=1):
 
 #--------------------------------------#
 
-# Function to create job from the information retrieved from the database
-def createJob(jobinfo):
+def reCreateJob(jobinfo):
+    """  Create job from the information retrieved from the database """
 
-    # Creating job file for load function to read from
-    jobfile = open("job.txt", "w")
-    jobfile.write(jobinfo.jobinfo)
-    jobfile.close()
+    # Recreate job using stored job info. Load() fuction inner functionality
+    lineList = []
+    for line in jobinfo.jobinfo.splitlines():
+        if (line.strip().startswith("#Ganga#")):
+            lineList.append("#Ganga#")
+        else:
+            lineList.append(line)
+    itemList = ("".join(lineList)).split("#Ganga#")
 
-    # Create Ganga job from job.txt
-    job = load("job.txt")
-    os.remove("job.txt")
+    jobList = []
+    for item in itemList:
+        item = item.strip()
+        if item:
+            try:
+                from GangaCore.GPIDev.Base.Proxy import getProxyInterface
+                this_object = eval(str(item), getProxyInterface().__dict__)
+                jobList.append(this_object)
+            except:
+                print("Unable to Recreate Ganga Job from given Job Info")
 
-    return job[0]
+    return jobList[0]
 
+#--------------------------------------#
+
+# Capture stdout for specific function
+class Capturing(list):
+    def __enter__(self):
+        self._stdout = sys.stdout
+        sys.stdout = self._stringio = StringIO()
+        return self
+    def __exit__(self, *args):
+        self.extend(self._stringio.getvalue().splitlines())
+        del self._stringio    # free up some memory
+        sys.stdout = self._stdout
+    
 #--------------------------------------#
 
 if __name__ == "__main__":
