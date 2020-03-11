@@ -4,8 +4,8 @@
 
 # Imports
 import ganga
-import ganga.ganga
 from ganga import Job, jobs, Executable, Local
+from GangaCore.testlib.monitoring import run_until_completed
 
 # Enable monitoring in Python
 ganga.enableMonitoring()
@@ -17,17 +17,15 @@ def main():
     # Create job
     job = createBasicGangaJob("Hello World")
 
-    # Submit job
     job.submit()
     print(f"PYTHON OUTPUT: Job Submited with ID: {job.id}")
 
-    # Monitor job
-    monitorGangaJob(job)
+    run_until_completed(job)
+    print(f"PYTHON OUTPUT: Job with ID: {job.id}, Completed")
 
-    # Prints stdout of the job in the terminal
     job.peek("stdout", "cat")
 
-    # Delete file after job is complete
+    # Delete job
     job.remove()
     print(f"PYTHON OUTPUT: Deleted Job with ID {job.id}")
 
@@ -35,8 +33,9 @@ def main():
 
 #--------------------------------------#
 
-# Create & specify basic Ganga job
+# Create & specify simple Ganga job
 def createBasicGangaJob(args="Hello World"):
+    """ Creates a simple Ganga Job to execute /bin/echo with arguments given as parameters """
     
     job = Job(name="Basic Ganga Job")
     job.application = Executable()
@@ -48,31 +47,6 @@ def createBasicGangaJob(args="Hello World"):
 
 #--------------------------------------#
 
-# Monitor Ganga job
-def monitorGangaJob(job):
-
-    # Ganga Job check
-    if not isinstance(job, Job):
-        print("ERROR: Not an instance Ganga Job")
-        return False
-
-    status = job.status
-
-    while True:
-        if job.status != status:
-            status = job.status
-            print(f"PYTHON OUTPUT: Job Status changed to: {status}")
-
-        if job.status == "completed":
-            status = job.status
-            print(f"PYTHON OUTPUT: Job with ID {job.id} Complete!")
-            break
-    
-    return "completed"
-
-#--------------------------------------#
-
-# Execute main()
 if __name__ == "__main__":
     main()
 
