@@ -16,6 +16,8 @@ setup(
           'pdfminer',
           'SQLAlchemy',
           'psycopg2-binary',
+          'flask',
+          'python-dotenv',
       ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
