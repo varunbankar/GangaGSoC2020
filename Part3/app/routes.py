@@ -71,7 +71,7 @@ def deploy_test_jobs():
     """ Deploy 15 Ganga Job which executes Sleep at different time intervals """
 
     # Submit jobs
-    time = 10
+    time = 15
     for i in range(0, 15):
         submitSleepJob(time)
         time += 5
