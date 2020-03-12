@@ -84,8 +84,32 @@ The file associated with this task is `./Part2/timeCalc.py`
 
 ## Part 3
 
-### Task 1 - Starting Up Simple Web Server
+For this Part of the challenge, I have used Flask web framework for Python to create a web server. Before going into the working of I would like to explain the structure of the project. All the files related to this task reside in `./Part3/` folder. 
 
-#TODO
+- `[app.py](http://app.py)` - used to start Flask server at `localhost:5000`
+- `[config.py](http://config.py)` - has configuration related to flask stored in a Class.
+- `app` - package which contains the core files.
+    - `[routes.py](http://routes.py)` - here resides the logic of what routes are available and what must be done when the specific route is requested.
+    - `templates` - folder which has all the HTML file which are dynamically rendered using Jinja2
+    - `static` - folder has static files such as `main.css` , `home.js` , `jobs.js`
+
+Now the basic structure is discussed, the core files here are `[routes.py](http://routes.py)` , `home.js`, `jobs.js`
+
+- The GUI has 4 pages:
+    - Home: Has a quick statistics section which updated every 5 seconds (can be modified according to requirement) by making API calls to the server, has another sections which lists out 10 recent jobs which are also updated every 5 seconds by making API calls to the server and lastly, there is a section call "Programming Fun" which makes an AJAX request to a API and receiving a joke which is updated every 8 seconds.
+    - Create: I have created the layout to showcase how the create page can look, but here only the deploy section is working. Deploy section has 2 buttons, one is to submit a Ganga Job to execute Sleep(60) and another is to submit 15 Ganga Job to execute Sleep(15), Sleep(20)...and so on.
+    - Jobs: This page lists out all the job and their information in a tabular form, here also the status of the jobs are updated every 5 seconds by making API calls to the server. Here the "Job Info" button is just to showcase the layout of how the GUI might look.
+    - Config: This page lists out Ganga config for each section in a nice tabular way which their docstrings and effective value.
+- Javascript:
+    - home.js: Utilised by Home page, makes 3 AJAX requests.
+        - One request is make to an external API to fetch a joke every 8 seconds
+        - One is made to update quick statistics section every 5 seconds
+        - One is made to update Recend Job status every 5 seconds (NOTE: the request is only made when there is atleast one job who's status are not in ["new", "completed", "failed"]
+
+    - jobs.js: Utilised by Jobs page, makes an AJAX API request to the server every 5 seconds if there is atleast one job who's status are not in ["new", "completed", "failed"]
+- API:
+    - `[localhost:5000/api/info](http://localhost:5000/api/info)` - If "GET" request is made, returns information about every job in JSON format.
+    - `[localhost:5000/api/info](http://localhost:5000/api/info)` - If "POST" request is made and "job_ids" data is given, then returns information about the jobs with job id in job_ids in JSON format
+    - `[localhost:5000/api/info/<int:job_is>](http://localhost:5000/api/info/<int:job_is>)` - Returns information about job with [job.id](http://job.id) = job_id in JSON format
 
 ---
