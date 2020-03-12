@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     Joke()
     setInterval(Joke, 8000);
-    setInterval(refreshStatus, 5000);
-    setInterval(refreshStats, 5000);
+    setInterval(refreshStatus, 2000);
+    setInterval(refreshStats, 2000);
 });
 
 // AJAX request to get a programming joke from a API
