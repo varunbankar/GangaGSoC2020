@@ -27,6 +27,7 @@ The Python file associated with this task is `./Part1/basicGangaJob.py` and can 
 - Function `run_until_completed` - waits until the jobs status turns to 'completed'.
 
 **SCREENSHOT:**
+![Alt text](https://snipboard.io/m0BWSp.jpg "Optional title")
 
 **DEMO: #TOUPLOAD**
 
@@ -48,6 +49,7 @@ The Python file associated with this task is `./Part1/wordCounter.py` with the h
 - After all the jobs are finished, they are removed.
 
 **SCREENSHOT:**
+![Alt text](https://snipboard.io/SOjRGu.jpg "Optional title")
 
 **DEMO: #TOUPLOAD**
 
@@ -67,6 +69,7 @@ The file associated with this task is `./Part2/createDatabase.py`
 - Function `main()` - using `createBasicGangaJob` from Task 1 create a basic Ganga Job, adds it to database, and using `readFromDatabase` the job text is stored in `jobinfo` variable, and using `createJob` function the basic job is recreated and submitted to run. After the job is finished, it is removed.
 
 **SCREENSHOT:**
+![Alt text](https://snipboard.io/KzNOFZ.jpg "Optional title")
 
 **DEMO: #TOUPLOAD**
 
@@ -79,8 +82,20 @@ The file associated with this task is `./Part2/timeCalc.py`
 - Function `reCreateJob_time` - using `timeit.timeit` benchmarks the time it take for `reCreateJob` function to run 100 times.
 
 **SCREENSHOTS:**
+![Alt text](https://snipboard.io/FfWwPt.jpg "Optional title")
 
 **DEMO: #TOUPLOAD**
+
+## Pytest
+
+**TestSimpleJob.py**
+![Alt text](https://snipboard.io/RQ7FN2.jpg "Optional title")
+
+**TestWordCounter.py**
+![Alt text](https://snipboard.io/piV1gv.jpg "Optional title")
+
+**TestDatabase.py**
+![Alt text](https://snipboard.io/rAGROu.jpg "Optional title")
 
 ## Part 3
 
@@ -110,5 +125,19 @@ Now the basic structure is discussed, the core functionality lies in `routes.py`
     - `localhost:5000/api/info` - If "GET" request is made, returns information about every job in JSON format.
     - `localhost:5000/api/info` - If "POST" request is made and "job_ids" data is given, then returns information about the jobs with job id in job_ids in JSON format
     - `localhost:5000/api/info/<int:job_id>` - Returns information about job with job.id = job_id in JSON format
+
+**SCREENSHOTS:**
+
+**HOME**
+![Alt text](https://snipboard.io/CdrWw5.jpg "Optional title")
+
+**CREATE**
+![Alt text](https://snipboard.io/1MpelJ.jpg "Optional title")
+
+**JOBS**
+![Alt text](https://snipboard.io/LHnfiX.jpg "Optional title")
+
+**CONFIG**
+![Alt text](https://snipboard.io/zEqutd.jpg "Optional title")
 
 ---
