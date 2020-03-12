@@ -4,6 +4,7 @@
 
 # Imports
 import ganga
+import ganga.ganga
 from ganga import Job, jobs, Executable, Local
 from GangaCore.testlib.monitoring import run_until_completed
 
