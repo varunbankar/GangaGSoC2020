@@ -35,16 +35,16 @@ The Python file associated with this task is `./Part1/basicGangaJob.py` . I will
 The Python file associated with this task is `./Part1/wordCounter.py` with the helper modules `pdfSplitter.py`, `pdfSplitter.sh`, `count.sh`, `merger.py` . 
 
 - The `main()` function can be divided into 3 parts:
-    - First, A Ganga Job is created to split `CERN.pdf` into individual pages. `[pdfSplitter.py](http://pdfsplitter.py)` & `[pdfSplitter.sh](http://pdfsplitter.sh)` are given as input files.
-        - `[pdfSplitter.py](http://pdfsplitter.py)` - uses PyPDF2 package and splits the pdf into individual page pdf and saves them in the same directory.
-        - `[pdfSplitter.sh](http://pdfsplitter.sh)` - simple bash script to run `pdfSplitter.py`
+    - First, A Ganga Job is created to split `CERN.pdf` into individual pages. `pdfSplitter.py` & `pdfSplitter.sh` are given as input files.
+        - `pdfSplitter.py` - uses PyPDF2 package and splits the pdf into individual page pdf and saves them in the same directory.
+        - `pdfSplitter.sh` - simple bash script to run `pdfSplitter.py`
         - After the job is completed, all the files are stored in the `outputdir` of the Ganga job and information about them in `job.outputfiles`
         - Using the information in `job.outputfiles` , an array `args` is created containing the names of all the split files to be used for `ArgSplitter`
-    - Second, another Ganga Job is created with splitter as `ArgSplitter(args=args)` , the job uses `[count.sh](http://count.sh)` to count the occurrence of word `the` in a given file. Input files for the job is directly taken from `job.outputfiles` and output file is set to `count.txt` which will contain the numeric count of occurrence of word 'the'
-        - `[count.sh](http://count.sh)` - takes a file name as argument and count the number of occurrence of the word 'the' and stores the value in `output.txt`
+    - Second, another Ganga Job is created with splitter as `ArgSplitter(args=args)` , the job uses `count.sh` to count the occurrence of word `the` in a given file. Input files for the job is directly taken from `job.outputfiles` and output file is set to `count.txt` which will contain the numeric count of occurrence of word 'the'
+        - `count.sh` - takes a file name as argument and count the number of occurrence of the word 'the' and stores the value in `output.txt`
         - After the job is completed, the `output.txt` of all the subjobs is merged
-    - Third, `CustomMerger()` is implemented to merge the `output.txt` from all the subjobs and save in it the directory `wordCounterOutput` . This merger uses `[merger.py](http://merger.py)` as module.
-        - `[merger.py](http://merger.py)` - takes `output.txt` of all the subjobs, converts the value inside it into integer, add all the values and save it in the file in `wordCounterOutput`
+    - Third, `CustomMerger()` is implemented to merge the `output.txt` from all the subjobs and save in it the directory `wordCounterOutput` . This merger uses `merger.py` as module.
+        - `merger.py` - takes `output.txt` of all the subjobs, converts the value inside it into integer, add all the values and save it in the file in `wordCounterOutput`
 - After all the jobs are finished, they are removed.
 
 **SCREENSHOT:**
@@ -86,14 +86,14 @@ The file associated with this task is `./Part2/timeCalc.py`
 
 For this Part of the challenge, I have used Flask web framework for Python to create a web server. Before going into the working of I would like to explain the structure of the project. All the files related to this task reside in `./Part3/` folder. 
 
-- `[app.py](http://app.py)` - used to start Flask server at `localhost:5000`
-- `[config.py](http://config.py)` - has configuration related to flask stored in a Class.
+- `app.py` - used to start Flask server at `localhost:5000`
+- `config.py` - has configuration related to flask stored in a Class.
 - `app` - package which contains the core files.
-    - `[routes.py](http://routes.py)` - here resides the logic of what routes are available and what must be done when the specific route is requested.
+    - `routes.py` - here resides the logic of what routes are available and what must be done when the specific route is requested.
     - `templates` - folder which has all the HTML file which are dynamically rendered using Jinja2
     - `static` - folder has static files such as `main.css` , `home.js` , `jobs.js`
 
-Now the basic structure is discussed, the core files here are `[routes.py](http://routes.py)` , `home.js`, `jobs.js`
+Now the basic structure is discussed, the core files here are `routes.py` , `home.js`, `jobs.js`
 
 - The GUI has 4 pages:
     - Home: Has a quick statistics section which updated every 5 seconds (can be modified according to requirement) by making API calls to the server, has another sections which lists out 10 recent jobs which are also updated every 5 seconds by making API calls to the server and lastly, there is a section call "Programming Fun" which makes an AJAX request to a API and receiving a joke which is updated every 8 seconds.
@@ -105,11 +105,10 @@ Now the basic structure is discussed, the core files here are `[routes.py](http:
         - One request is make to an external API to fetch a joke every 8 seconds
         - One is made to update quick statistics section every 5 seconds
         - One is made to update Recend Job status every 5 seconds (NOTE: the request is only made when there is atleast one job who's status are not in ["new", "completed", "failed"]
-
     - jobs.js: Utilised by Jobs page, makes an AJAX API request to the server every 5 seconds if there is atleast one job who's status are not in ["new", "completed", "failed"]
 - API:
-    - `[localhost:5000/api/info](http://localhost:5000/api/info)` - If "GET" request is made, returns information about every job in JSON format.
-    - `[localhost:5000/api/info](http://localhost:5000/api/info)` - If "POST" request is made and "job_ids" data is given, then returns information about the jobs with job id in job_ids in JSON format
-    - `[localhost:5000/api/info/<int:job_is>](http://localhost:5000/api/info/<int:job_is>)` - Returns information about job with [job.id](http://job.id) = job_id in JSON format
+    - `localhost:5000/api/info` - If "GET" request is made, returns information about every job in JSON format.
+    - `localhost:5000/api/info` - If "POST" request is made and "job_ids" data is given, then returns information about the jobs with job id in job_ids in JSON format
+    - `localhost:5000/api/info/<int:job_id>` - Returns information about job with job.id = job_id in JSON format
 
 ---
