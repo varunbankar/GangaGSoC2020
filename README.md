@@ -95,18 +95,18 @@ For this Part of the challenge, I have used Flask web framework for Python to cr
 
 Now the basic structure is discussed, the core functionality lies in `routes.py` , `home.js`, `jobs.js`.
 
-- The GUI has 4 pages:
+- **The GUI has 4 pages:**
     - **Home:** Has a quick statistics section which gets updated every 5 seconds (time can be modified according to requirement) by making an API call to the server, has another sections which lists out 10 Recent Jobs which are also updated every 5 seconds by making an API call to the server and lastly, there is a section called "Programming Fun" which makes an AJAX request to a external API and fetches a joke, it is updated every 8 seconds.
     - **Create:** I have created the layout to showcase how the create page can look, but here only the deploy section is working. Deploy section has 2 buttons, one is to submit a Ganga Job to execute `Sleep(60)` and another is to submit 15 Ganga Job to execute `Sleep(15)`, `Sleep(20)`...and so on.
     - **Jobs:** This page lists out all the jobs and their information in a tabular form, here also the status of the jobs are updated every 5 seconds by making an API call to the server. Here the "Job Info" button is just to showcase the layout of how the GUI might look.
     - Config: This page lists out Ganga config for each section in a nice tabular way with their docstrings and effective value.
-- Javascript:
-    - home.js: Utilised by Home page, makes 3 AJAX requests.
+- **Javascript:**
+    - **home.js:** Utilised by Home page, makes 3 AJAX requests.
         - One request is make to an external API to fetch a joke every 8 seconds
         - One is made to update quick statistics section every 5 seconds
         - One is made to update Recent Job status every 5 seconds (NOTE: the request is only made when there is atleast one job who's status is not in ["new", "completed", "failed"]
-    - jobs.js: Utilised by Jobs page, makes an AJAX API request to the server every 5 seconds if there is atleast one job who's status is not in ["new", "completed", "failed"].
-- API:
+    - **jobs.js:** Utilised by Jobs page, makes an AJAX API request to the server every 5 seconds if there is atleast one job who's status is not in ["new", "completed", "failed"].
+- **API:**
     - `localhost:5000/api/info` - If "GET" request is made, returns information about every job in JSON format.
     - `localhost:5000/api/info` - If "POST" request is made and "job_ids" data is given, then returns information about the jobs with job id in job_ids in JSON format
     - `localhost:5000/api/info/<int:job_id>` - Returns information about job with job.id = job_id in JSON format
