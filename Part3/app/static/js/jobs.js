@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    setInterval(refreshStatus, 5000);
+    setInterval(refreshStatus, 2000);
 });
 
 // Refresh Status of Jobs (Not of jobs with status = [completed, new, failed])
