@@ -12,6 +12,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import ganga
+import ganga.ganga
 from ganga import Job
 from GangaCore.GPIDev.Persistency import stripProxy
 from GangaCore.testlib.monitoring import run_until_completed
