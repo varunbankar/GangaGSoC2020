@@ -3,11 +3,8 @@
 ########################################
 
 # Imports
-import sys
-if sys.version_info >= (3, 0):
-    import ganga
-else:
-    import ganga.ganga
+import ganga
+import ganga.ganga
 from ganga import Job, jobs, Executable, Local
 from GangaCore.testlib.monitoring import run_until_completed
 
