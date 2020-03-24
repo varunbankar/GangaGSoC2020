@@ -6,7 +6,7 @@
 import ganga
 try:
     import ganga.ganga
-except ImportError:
+except ModuleNotFoundError:
     pass
 from ganga import Job, jobs, Executable, Local
 from GangaCore.testlib.monitoring import run_until_completed
