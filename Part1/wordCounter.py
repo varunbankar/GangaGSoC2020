@@ -5,7 +5,10 @@
 # Imports
 import os
 import ganga
-import ganga.ganga
+try:
+    import ganga.ganga
+except ModuleNotFoundError:
+    pass
 from ganga import Job, jobs, Executable, File, LocalFile, ArgSplitter, CustomMerger, Local
 from GangaCore.testlib.monitoring import run_until_completed
 
