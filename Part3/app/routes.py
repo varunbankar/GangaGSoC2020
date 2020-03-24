@@ -7,7 +7,10 @@ from app import app
 from flask import render_template, request, flash, redirect, url_for, jsonify
 import json
 import ganga
-import ganga.ganga
+try:
+    import ganga.ganga
+except ModuleNotFoundError:
+    pass
 from ganga import Job, Executable, Local, jobs, config
 from GangaCore.Utility.Config import getConfig
 
